@@ -37,6 +37,88 @@ db_credentials.*
 connection_string.*
 
 # ===============================================
+# CLAUDE AI & DEVELOPMENT ARTIFACTS
+# ===============================================
+
+# Claude Code AI Assistant files (keep essential, ignore dev artifacts)
+.claude
+.claude/
+claude_config/
+claude_memory/
+claude_context/
+claude_sessions/
+claude_workspace/
+ai_assistant_files/
+development_context/
+
+# AI Development artifacts (keep main memory-bank structure)
+memory-bank/private/
+memory-bank/sensitive/
+memory-bank/sessions/
+ai_context/
+ai_memory/
+claude_dev_sessions/
+development_notes/
+ai_prompts/
+
+# Progress Tracking & Development Plans (keep main progress, ignore drafts)
+progress/drafts/
+progress/archived/
+development_plan/
+dev_plan/
+project_progress/
+milestone_tracking/
+
+# Test Data & Mock Files
+test_resume.*
+test_job_description.*
+test_auth.*
+mock_data/
+sample_resumes/
+test_uploads/
+demo_files/
+
+# Build & Development Scripts
+setup-repo.sh
+setup-repo.sg
+setup_repo.*
+build_prompt.*
+frontend_build_prompt.*
+dev_setup.*
+install_script.*
+
+# IDE & Editor Configurations
+.cursor/
+cursor_dev_plan/
+cursor_settings/
+.cursor-workspace
+cursor.json
+.claude_dev/
+claude_workspace/
+ai_assistant_files/
+development_context/
+
+# Documentation Drafts & Notes (keep main docs, ignore drafts)
+SECURITY.md.draft
+README.md.backup
+docs_draft/
+documentation_notes/
+project_notes/
+development_log/
+cursor_development_plan*.md
+frontend_build_prompt*.md
+build_instructions/
+setup_notes/
+
+# Profile Enhancement Suite Development (keep actual suite, ignore drafts)
+profile-enhancement-drafts/
+profile_enhancement_backup/
+enhancement_suite_old/
+frontend_prototype/
+ui_experiments/
+component_drafts/
+
+# ===============================================
 # PYTHON BACKEND
 # ===============================================
 
@@ -378,8 +460,10 @@ profile/
 
 # Keep essential documentation
 !README.md
-!CLAUDE.md
 !docs/
+
+# Keep project documentation but ignore AI development files
+# Note: CLAUDE.md is intentionally excluded from repository
 
 # Keep CI/CD templates (without secrets)
 !.github/workflows/*.yml.template
