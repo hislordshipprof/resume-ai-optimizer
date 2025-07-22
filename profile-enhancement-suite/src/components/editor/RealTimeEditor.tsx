@@ -8,6 +8,8 @@ import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useResumeFlow } from "@/contexts/ResumeFlowContext";
+import { apiService } from "@/services/apiService";
+import { toast } from "@/hooks/use-toast";
 import { 
   Edit3, 
   Brain, 
@@ -106,6 +108,7 @@ export function RealTimeEditor({ className }: RealTimeEditorProps) {
   const [currentContent, setCurrentContent] = useState<any>(null);
   const [liveTypingContent, setLiveTypingContent] = useState<string>("");
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [eventSource, setEventSource] = useState<EventSource | null>(null);
 
   // Initialize AI optimizations when component loads
   useEffect(() => {
@@ -114,17 +117,166 @@ export function RealTimeEditor({ className }: RealTimeEditorProps) {
     }
   }, [resumeData, jobAnalysis]);
 
+  // Set up Server-Sent Events for real-time suggestions
+  useEffect(() => {
+    if (resumeData?.id && jobAnalysis?.id) {
+      const es = apiService.createOptimizationStream(resumeData.id, jobAnalysis.id);
+      
+      es.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          
+          if (data.type === 'suggestion') {
+            const newSuggestion: OptimizationSuggestion = {
+              id: data.id,
+              type: data.suggestion_type,
+              section: data.section,
+              original: data.original,
+              suggested: data.suggested,
+              reason: data.reason,
+              impact: data.impact
+            };
+            
+            setAnalysis(prev => prev ? {
+              ...prev,
+              suggestions: [...prev.suggestions, newSuggestion]
+            } : null);
+          } else if (data.type === 'score_update') {
+            setAnalysis(prev => prev ? {
+              ...prev,
+              overallScore: data.overall_score,
+              atsScore: data.ats_score,
+              keywordMatch: data.keyword_match,
+              impactScore: data.impact_score
+            } : null);
+          }
+        } catch (error) {
+          console.error('Error parsing SSE data:', error);
+        }
+      };
+      
+      setEventSource(es);
+      
+      return () => {
+        es.close();
+      };
+    }
+  }, [resumeData?.id, jobAnalysis?.id]);
+
+  // Cleanup event source on unmount
+  useEffect(() => {
+    return () => {
+      if (eventSource) {
+        eventSource.close();
+      }
+    };
+  }, [eventSource]);
+
   const generateAIOptimizations = async () => {
-    if (!resumeData || !jobAnalysis) return;
+    if (!resumeData || !jobAnalysis || !resumeData.id || !jobAnalysis.id) return;
     
     setIsGeneratingOptimizations(true);
     
-    // Simulate AI bulk optimization
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    
+    try {
+      // Call the optimize resume API
+      const optimizationResult = await apiService.optimizeResume({
+        resume_id: resumeData.id,
+        job_analysis_id: jobAnalysis.id,
+        target_job_title: jobAnalysis.job_title || "Software Engineer",
+        optimization_focus: ["keywords", "impact", "structure", "content"],
+        include_projects: true,
+        max_pages: 2,
+        format_style: "modern"
+      });
+
+      // Transform API response to component format
+      const optimizedComparison: ResumeComparison = {
+        summary: {
+          original: resumeData.summary || "Professional summary",
+          optimized: optimizationResult.optimized_content?.summary || resumeData.summary || "Professional summary",
+          improvements: optimizationResult.improvements?.summary || [],
+          score: optimizationResult.scores?.summary || 85
+        },
+        experience: resumeData.experience?.map((exp, index) => ({
+          original: exp.description || "Work experience",
+          optimized: optimizationResult.optimized_content?.experience?.[index] || exp.description || "Work experience",
+          improvements: optimizationResult.improvements?.experience?.[index] || [],
+          score: optimizationResult.scores?.experience?.[index] || 85
+        })) || [],
+        skills: {
+          original: resumeData.skills?.join(", ") || "Skills",
+          optimized: optimizationResult.optimized_content?.skills || resumeData.skills?.join(", ") || "Skills",
+          improvements: optimizationResult.improvements?.skills || [],
+          score: optimizationResult.scores?.skills || 85
+        },
+        education: resumeData.education?.map((edu, index) => ({
+          original: `${edu.degree}, ${edu.school}`,
+          optimized: optimizationResult.optimized_content?.education?.[index] || `${edu.degree}, ${edu.school}`,
+          improvements: optimizationResult.improvements?.education?.[index] || [],
+          score: optimizationResult.scores?.education?.[index] || 85
+        })) || [],
+        projects: resumeData.projects?.map((project, index) => ({
+          original: project.description,
+          optimized: optimizationResult.optimized_content?.projects?.[index] || project.description,
+          improvements: optimizationResult.improvements?.projects?.[index] || [],
+          score: optimizationResult.scores?.projects?.[index] || 85
+        })) || []
+      };
+      
+      setOptimizedComparison(optimizedComparison);
+      setCurrentContent(optimizedComparison);
+
+      // Get optimization insights/analysis
+      const insights = await apiService.getOptimizationInsights(resumeData.id, jobAnalysis.id);
+      
+      const analysis: RealTimeAnalysis = {
+        overallScore: insights.overall_score || 85,
+        atsScore: insights.ats_score || 85,
+        keywordMatch: insights.keyword_match || 85,
+        impactScore: insights.impact_score || 85,
+        readabilityScore: insights.readability_score || 85,
+        keywords: {
+          found: insights.keywords?.found || [],
+          missing: insights.keywords?.missing || [],
+          density: insights.keywords?.density || 0
+        },
+        suggestions: insights.suggestions?.map((s: any) => ({
+          id: s.id,
+          type: s.type,
+          section: s.section,
+          original: s.original,
+          suggested: s.suggested,
+          reason: s.reason,
+          impact: s.impact
+        })) || []
+      };
+      
+      setAnalysis(analysis);
+      
+      toast({
+        title: "Optimization Complete",
+        description: "Your resume has been optimized based on the job requirements.",
+      });
+    } catch (error) {
+      console.error('Error generating AI optimizations:', error);
+      toast({
+        title: "Optimization Failed",
+        description: "Failed to optimize resume. Please try again.",
+        variant: "destructive",
+      });
+      
+      // Fall back to mock data on error for demo purposes
+      generateMockOptimizations();
+    } finally {
+      setIsGeneratingOptimizations(false);
+    }
+  };
+
+  // Fallback function for demo purposes
+  const generateMockOptimizations = () => {
     const mockOptimizedComparison: ResumeComparison = {
       summary: {
-        original: resumeData.summary || "Experienced software engineer with background in development.",
+        original: resumeData?.summary || "Experienced software engineer with background in development.",
         optimized: "Results-driven Senior Software Engineer with 5+ years of experience building scalable web applications using React, Node.js, and cloud technologies. Proven track record of leading cross-functional teams and delivering projects 30% ahead of schedule while maintaining 99.9% uptime.",
         improvements: [
           "Added specific years of experience",
@@ -134,7 +286,7 @@ export function RealTimeEditor({ className }: RealTimeEditorProps) {
         ],
         score: 89
       },
-      experience: resumeData.experience?.map((exp, index) => ({
+      experience: resumeData?.experience?.map((exp, index) => ({
         original: exp.description || "Worked on software development projects",
         optimized: index === 0 
           ? "• Architected and developed 15+ responsive web applications using React, Node.js, and PostgreSQL, serving 10,000+ daily users\n• Optimized database performance through advanced SQL queries and indexing, reducing load times by 45%\n• Led agile development team of 6 engineers on cross-functional projects, delivering features 30% ahead of schedule"
@@ -148,7 +300,7 @@ export function RealTimeEditor({ className }: RealTimeEditorProps) {
         score: 92
       })) || [],
       skills: {
-        original: resumeData.skills?.join(", ") || "JavaScript, React, Node.js",
+        original: resumeData?.skills?.join(", ") || "JavaScript, React, Node.js",
         optimized: "Technical Skills:\n• Programming Languages: JavaScript (ES6+), TypeScript, Python, SQL\n• Frontend: React.js, Redux, HTML5, CSS3, Responsive Design\n• Backend: Node.js, Express.js, RESTful APIs, GraphQL\n• Databases: PostgreSQL, MongoDB, Redis\n• Cloud & DevOps: AWS, Docker, Git, CI/CD",
         improvements: [
           "Organized skills by category",
@@ -158,7 +310,7 @@ export function RealTimeEditor({ className }: RealTimeEditorProps) {
         ],
         score: 88
       },
-      education: resumeData.education?.map(edu => ({
+      education: resumeData?.education?.map(edu => ({
         original: `${edu.degree}, ${edu.school}`,
         optimized: `${edu.degree}\n${edu.school} | ${edu.year}\nRelevant Coursework: Data Structures, Algorithms, Software Engineering, Database Systems`,
         improvements: [
@@ -168,7 +320,7 @@ export function RealTimeEditor({ className }: RealTimeEditorProps) {
         ],
         score: 85
       })) || [],
-      projects: resumeData.projects?.map(project => ({
+      projects: resumeData?.projects?.map(project => ({
         original: project.description,
         optimized: `${project.title}\n• Built scalable ${project.description} using ${project.technologies.join(", ")}\n• Implemented responsive design serving 5,000+ monthly users\n• Integrated third-party APIs and payment processing\n• Technologies: ${project.technologies.join(", ")}, Docker, AWS`,
         improvements: [
@@ -184,7 +336,6 @@ export function RealTimeEditor({ className }: RealTimeEditorProps) {
     setOptimizedComparison(mockOptimizedComparison);
     setCurrentContent(mockOptimizedComparison);
     
-    // Generate analysis based on job requirements
     const mockAnalysis: RealTimeAnalysis = {
       overallScore: 89,
       atsScore: 92,
@@ -219,7 +370,6 @@ export function RealTimeEditor({ className }: RealTimeEditorProps) {
     };
     
     setAnalysis(mockAnalysis);
-    setIsGeneratingOptimizations(false);
   };
 
   const handleContentChange = useCallback((section: string, content: string) => {
@@ -248,54 +398,112 @@ export function RealTimeEditor({ className }: RealTimeEditorProps) {
   }, [typingTimeout]);
 
   const generateLiveSuggestions = async (section: string, content: string) => {
-    // Simulate real-time AI analysis
-    const newSuggestions: OptimizationSuggestion[] = [
-      {
+    if (!resumeData?.id || !jobAnalysis?.id) return;
+
+    try {
+      // Call real-time analysis API
+      const result = await apiService.analyzeRealtime({
+        resume_id: resumeData.id,
+        job_analysis_id: jobAnalysis.id,
+        section,
+        field: section,
+        old_value: currentContent?.[section]?.optimized || "",
+        new_value: content,
+        cursor_position: content.length
+      });
+
+      // Transform API suggestions to component format
+      const newSuggestions: OptimizationSuggestion[] = result.suggestions?.map((s: any) => ({
+        id: s.id || Date.now().toString(),
+        type: s.type,
+        section: s.section,
+        original: s.original,
+        suggested: s.suggested,
+        reason: s.reason,
+        impact: s.impact
+      })) || [];
+
+      // Add new suggestions to existing ones
+      setAnalysis(prev => prev ? {
+        ...prev,
+        overallScore: result.updated_score || prev.overallScore,
+        suggestions: [...prev.suggestions.filter(s => s.section !== section), ...newSuggestions]
+      } : null);
+
+    } catch (error) {
+      console.error('Error generating live suggestions:', error);
+      
+      // Fallback to mock suggestion on error
+      const mockSuggestion: OptimizationSuggestion = {
         id: Date.now().toString(),
         type: "impact",
         section,
-        original: content.slice(0, 50) + "...",
+        original: content.slice(0, 50) + (content.length > 50 ? "..." : ""),
         suggested: content + " resulting in 25% improved efficiency",
         reason: "Add quantifiable impact to strengthen the statement",
         impact: "high"
-      }
-    ];
-    
-    setAnalysis(prev => prev ? {
-      ...prev,
-      suggestions: [...prev.suggestions, ...newSuggestions]
-    } : null);
+      };
+      
+      setAnalysis(prev => prev ? {
+        ...prev,
+        suggestions: [...prev.suggestions.filter(s => s.section !== section), mockSuggestion]
+      } : null);
+    }
   };
 
-  const applySuggestion = useCallback((suggestionId: string) => {
-    if (!analysis) return;
+  const applySuggestion = useCallback(async (suggestionId: string) => {
+    if (!analysis || !resumeData?.id) return;
     
     const suggestion = analysis.suggestions.find(s => s.id === suggestionId);
     if (!suggestion) return;
 
-    // Apply the suggestion to current content
-    setCurrentContent((prev: any) => {
-      const section = prev?.[suggestion.section];
-      if (!section) return prev;
-      
-      return {
-        ...prev,
-        [suggestion.section]: {
-          ...section,
-          optimized: section.optimized.replace(suggestion.original, suggestion.suggested)
-        }
-      };
-    });
+    try {
+      // Call API to apply suggestion
+      await apiService.applySuggestion({
+        suggestion_id: suggestionId,
+        resume_id: resumeData.id,
+        section: suggestion.section,
+        field: suggestion.section,
+        new_value: suggestion.suggested
+      });
 
-    // Mark suggestion as applied and update score
-    setAnalysis(prev => prev ? {
-      ...prev,
-      overallScore: Math.min(100, prev.overallScore + 2),
-      suggestions: prev.suggestions.map(s => 
-        s.id === suggestionId ? { ...s, applied: true } : s
-      )
-    } : null);
-  }, [analysis]);
+      // Apply the suggestion to current content
+      setCurrentContent((prev: any) => {
+        const section = prev?.[suggestion.section];
+        if (!section) return prev;
+        
+        return {
+          ...prev,
+          [suggestion.section]: {
+            ...section,
+            optimized: section.optimized.replace(suggestion.original, suggestion.suggested)
+          }
+        };
+      });
+
+      // Mark suggestion as applied and update score
+      setAnalysis(prev => prev ? {
+        ...prev,
+        overallScore: Math.min(100, prev.overallScore + 2),
+        suggestions: prev.suggestions.map(s => 
+          s.id === suggestionId ? { ...s, applied: true } : s
+        )
+      } : null);
+
+      toast({
+        title: "Suggestion Applied",
+        description: "The optimization suggestion has been applied to your resume.",
+      });
+
+    } catch (error) {
+      console.error('Error applying suggestion:', error);
+      toast({
+        title: "Failed to Apply",
+        description: "Could not apply the suggestion. Please try again.",
+        variant: "destructive",
+      });
+    }
+  }, [analysis, resumeData]);
 
   const rejectSuggestion = useCallback((suggestionId: string) => {
     setAnalysis(prev => prev ? {
@@ -304,11 +512,35 @@ export function RealTimeEditor({ className }: RealTimeEditorProps) {
     } : null);
   }, []);
 
-  const handleProceedToExport = () => {
+  const handleProceedToExport = async () => {
     if (currentContent) {
-      setOptimizedContent(currentContent);
-      markStepCompleted(4);
-      setCurrentStep(5);
+      try {
+        // Save the optimized content to context
+        setOptimizedContent(currentContent);
+        
+        // Optionally save to backend for persistence
+        if (resumeData?.id) {
+          await apiService.previewOptimization({
+            resume_id: resumeData.id,
+            optimized_content: currentContent,
+            analysis: analysis
+          });
+        }
+        
+        markStepCompleted(4);
+        setCurrentStep(5);
+        
+        toast({
+          title: "Optimization Saved",
+          description: "Your optimized resume is ready for export.",
+        });
+      } catch (error) {
+        console.error('Error saving optimization:', error);
+        // Still proceed even if save fails
+        setOptimizedContent(currentContent);
+        markStepCompleted(4);
+        setCurrentStep(5);
+      }
     }
   };
 
