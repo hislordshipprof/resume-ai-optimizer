@@ -1,0 +1,385 @@
+# ===============================================
+# SECURITY & SECRETS - CRITICAL TO IGNORE
+# ===============================================
+
+# Environment variables (API keys, secrets, etc.)
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+profile-enhancement-suite/.env
+profile-enhancement-suite/.env.*
+!profile-enhancement-suite/.env.example
+
+# API Keys & Secrets
+**/secrets/
+**/*secret*
+**/*key*
+**/*token*
+**/config/secrets.json
+**/config/private.json
+
+# Authentication & Certificates
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+jwt_secret
+auth_secret
+
+# Database credentials & connection strings
+database.url
+db_credentials.*
+connection_string.*
+
+# ===============================================
+# PYTHON BACKEND
+# ===============================================
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Python distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Python virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+backend/venv/
+backend/env/
+
+# Python testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.cache
+.pytest_cache/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Python IDEs
+.spyderproject
+.spyproject
+.rope_project_history
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# ===============================================
+# NODE.JS / REACT FRONTEND
+# ===============================================
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Build outputs
+/build
+/dist
+/frontend/build
+/frontend/dist
+/profile-enhancement-suite/build
+/profile-enhancement-suite/dist
+
+# React/Vite specific
+.vite/
+.vite-cache/
+
+# Package manager lockfiles (optional - team decision)
+# package-lock.json
+# yarn.lock
+# bun.lockb
+
+# ===============================================
+# DATABASES & DATA
+# ===============================================
+
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+
+# PostgreSQL dumps
+*.sql
+*.dump
+
+# Database migration files (be careful - might want to keep these)
+# alembic/versions/*.py
+
+# Data files
+data/
+datasets/
+uploads/
+user_data/
+resume_files/
+temp_files/
+
+# ===============================================
+# AI/ML SPECIFIC
+# ===============================================
+
+# Model files (can be large)
+*.pkl
+*.joblib
+*.h5
+*.pb
+*.onnx
+*.tflite
+models/
+checkpoints/
+weights/
+
+# Training data & outputs
+training_data/
+model_outputs/
+embeddings/
+vectors/
+
+# OpenAI & AI service logs
+openai_logs/
+ai_cache/
+llm_cache/
+
+# ===============================================
+# DOCKER & DEPLOYMENT
+# ===============================================
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+docker-compose.prod.yml
+Dockerfile.prod
+
+# Kubernetes
+k8s-secrets.yml
+*.kubeconfig
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+terraform.tfvars
+terraform.tfvars.json
+
+# ===============================================
+# DEVELOPMENT TOOLS & IDEs
+# ===============================================
+
+# VS Code
+.vscode/
+!.vscode/settings.json.example
+!.vscode/extensions.json.example
+
+# IntelliJ IDEA / PyCharm
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ===============================================
+# OPERATING SYSTEMS
+# ===============================================
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ===============================================
+# LOGS & TEMPORARY FILES
+# ===============================================
+
+# Application logs
+logs/
+*.log
+log/
+*.log.*
+log_*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+.nyc_output
+
+# Temporary files & directories
+tmp/
+temp/
+.tmp/
+.temp/
+*.tmp
+*.temp
+
+# Cache directories
+.cache/
+.npm/
+.eslintcache
+.parcel-cache/
+
+# ===============================================
+# TESTING & CI/CD
+# ===============================================
+
+# Test results
+test-results/
+coverage/
+.coverage
+htmlcov/
+.pytest_cache/
+junit.xml
+
+# CI/CD artifacts
+.github/workflows/secrets.yml
+.circleci/config.yml.backup
+
+# ===============================================
+# BACKUP & ARCHIVE FILES
+# ===============================================
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# ===============================================
+# PROJECT SPECIFIC
+# ===============================================
+
+# Resume AI specific uploads
+uploaded_resumes/
+processed_resumes/
+user_uploads/
+export_files/
+
+# Memory bank - keep structure but ignore sensitive content
+memory-bank/sensitive/
+memory-bank/private/
+
+# Local development overrides
+local_config.py
+local_settings.js
+dev_overrides/
+
+# Performance & profiling
+profile/
+*.prof
+*.pstats
+
+# ===============================================
+# IGNORE EXCEPTIONS (KEEP THESE FILES)
+# ===============================================
+
+# Keep example files
+!.env.example
+!docker-compose.example.yml
+!config.example.json
+
+# Keep essential documentation
+!README.md
+!CLAUDE.md
+!docs/
+
+# Keep CI/CD templates (without secrets)
+!.github/workflows/*.yml.template

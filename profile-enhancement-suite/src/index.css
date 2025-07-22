@@ -1,0 +1,302 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Resume AI - Professional Design System
+All colors MUST be HSL. Modern, AI-first aesthetic with trust-building elements.
+*/
+
+@layer base {
+  :root {
+    /* Resume AI Color Palette - Professional & Modern */
+    
+    /* Base Layout Colors */
+    --background: 0 0% 100%;
+    --foreground: 224 71% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+    
+    /* Primary Colors - Deep Blues (Trust, Intelligence) */
+    --primary: 220 90% 56%;        /* Professional blue */
+    --primary-foreground: 0 0% 100%;
+    --primary-dark: 220 90% 45%;   /* Darker blue for depth */
+    --primary-light: 220 90% 85%;  /* Light blue for backgrounds */
+    --primary-glow: 220 90% 75%;   /* Glow effect */
+    
+    /* Secondary Colors - Vibrant Greens (Success, Growth) */
+    --secondary: 142 71% 45%;      /* Success green */
+    --secondary-foreground: 0 0% 100%;
+    --secondary-dark: 142 71% 35%; /* Darker green */
+    --secondary-light: 142 71% 85%; /* Light green */
+    --secondary-glow: 142 71% 65%; /* Glow effect */
+    
+    /* Accent Colors - Warm Oranges (Energy, Optimization) */
+    --accent: 35 91% 62%;          /* Warm orange */
+    --accent-foreground: 0 0% 100%;
+    --accent-dark: 35 91% 45%;     /* Darker orange */
+    --accent-light: 35 91% 85%;    /* Light orange */
+    --accent-glow: 35 91% 75%;     /* Glow effect */
+    
+    /* AI Brand Colors - Purples (Innovation, AI) */
+    --ai-primary: 260 85% 65%;     /* Purple for AI elements */
+    --ai-secondary: 280 75% 70%;   /* Lighter purple */
+    --ai-accent: 270 80% 75%;      /* AI highlight */
+    --ai-glow: 260 85% 80%;        /* AI glow effect */
+    
+    /* Neutral Colors */
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    
+    /* Status Colors */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 48 96% 53%;
+    --warning-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Interface Elements */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 220 90% 56%;
+    
+    /* Professional Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(220 90% 56%), hsl(260 85% 65%));
+    --gradient-secondary: linear-gradient(135deg, hsl(142 71% 45%), hsl(172 71% 45%));
+    --gradient-accent: linear-gradient(135deg, hsl(35 91% 62%), hsl(25 91% 62%));
+    --gradient-ai: linear-gradient(135deg, hsl(260 85% 65%), hsl(280 75% 70%));
+    --gradient-hero: linear-gradient(135deg, hsl(220 90% 56%) 0%, hsl(260 85% 65%) 50%, hsl(280 75% 70%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%), hsl(220 14% 98%));
+    --gradient-subtle: linear-gradient(180deg, hsl(220 14% 98%), hsl(220 14% 96%));
+    
+    /* Professional Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(220 14% 0% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(220 14% 0% / 0.1), 0 2px 4px -2px hsl(220 14% 0% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(220 14% 0% / 0.1), 0 4px 6px -4px hsl(220 14% 0% / 0.1);
+    --shadow-xl: 0 20px 25px -5px hsl(220 14% 0% / 0.1), 0 8px 10px -6px hsl(220 14% 0% / 0.1);
+    --shadow-primary: 0 10px 30px -10px hsl(220 90% 56% / 0.25);
+    --shadow-glow: 0 0 40px hsl(220 90% 75% / 0.3);
+    --shadow-ai: 0 10px 30px -10px hsl(260 85% 65% / 0.25);
+    
+    /* Smooth Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    /* Optimization Score Colors */
+    --score-excellent: 142 71% 45%;  /* 90-100 */
+    --score-good: 120 61% 50%;       /* 75-89 */
+    --score-fair: 48 96% 53%;        /* 60-74 */
+    --score-poor: 0 84% 60%;         /* Below 60 */
+    
+    /* Professional Spacing */
+    --radius: 0.75rem;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark Mode - Professional Dark Theme */
+    --background: 224 71% 4%;
+    --foreground: 210 40% 98%;
+    --card: 224 71% 6%;
+    --card-foreground: 210 40% 98%;
+    --popover: 224 71% 6%;
+    --popover-foreground: 210 40% 98%;
+    
+    /* Primary remains vibrant in dark mode */
+    --primary: 220 90% 65%;
+    --primary-foreground: 0 0% 100%;
+    --primary-dark: 220 90% 50%;
+    --primary-light: 220 90% 80%;
+    --primary-glow: 220 90% 75%;
+    
+    /* Secondary adjusted for dark mode */
+    --secondary: 142 71% 50%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-dark: 142 71% 40%;
+    --secondary-light: 142 71% 75%;
+    --secondary-glow: 142 71% 65%;
+    
+    /* Accent adjusted for dark mode */
+    --accent: 35 91% 67%;
+    --accent-foreground: 0 0% 100%;
+    --accent-dark: 35 91% 50%;
+    --accent-light: 35 91% 80%;
+    --accent-glow: 35 91% 75%;
+    
+    /* AI colors for dark mode */
+    --ai-primary: 260 85% 70%;
+    --ai-secondary: 280 75% 75%;
+    --ai-accent: 270 80% 80%;
+    --ai-glow: 260 85% 85%;
+    
+    /* Dark mode neutrals */
+    --muted: 215 28% 17%;
+    --muted-foreground: 218 11% 65%;
+    
+    /* Status colors for dark mode */
+    --success: 142 71% 50%;
+    --warning: 48 96% 58%;
+    --destructive: 0 63% 31%;
+    
+    /* Dark mode borders */
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 220 90% 65%;
+    
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(220 90% 65%), hsl(260 85% 70%));
+    --gradient-secondary: linear-gradient(135deg, hsl(142 71% 50%), hsl(172 71% 50%));
+    --gradient-accent: linear-gradient(135deg, hsl(35 91% 67%), hsl(25 91% 67%));
+    --gradient-ai: linear-gradient(135deg, hsl(260 85% 70%), hsl(280 75% 75%));
+    --gradient-hero: linear-gradient(135deg, hsl(220 90% 65%) 0%, hsl(260 85% 70%) 50%, hsl(280 75% 75%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(224 71% 6%), hsl(215 28% 17%));
+    --gradient-subtle: linear-gradient(180deg, hsl(224 71% 6%), hsl(215 28% 17%));
+    
+    /* Dark mode shadows */
+    --shadow-primary: 0 10px 30px -10px hsl(220 90% 65% / 0.4);
+    --shadow-glow: 0 0 40px hsl(220 90% 65% / 0.3);
+    --shadow-ai: 0 10px 30px -10px hsl(260 85% 70% / 0.4);
+    
+    /* Sidebar dark mode */
+    --sidebar-background: 224 71% 4%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 220 90% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 28% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 215 28% 17%;
+    --sidebar-ring: 220 90% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  /* AI-specific component styles */
+  .ai-gradient {
+    background: var(--gradient-ai);
+  }
+  
+  .primary-gradient {
+    background: var(--gradient-primary);
+  }
+  
+  .secondary-gradient {
+    background: var(--gradient-secondary);
+  }
+  
+  .accent-gradient {
+    background: var(--gradient-accent);
+  }
+  
+  .hero-gradient {
+    background: var(--gradient-hero);
+  }
+  
+  .subtle-gradient {
+    background: var(--gradient-subtle);
+  }
+  
+  /* Professional shadows */
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .shadow-primary {
+    box-shadow: var(--shadow-primary);
+  }
+  
+  .shadow-ai {
+    box-shadow: var(--shadow-ai);
+  }
+  
+  /* Smooth transitions */
+  .smooth-transition {
+    transition: var(--transition-smooth);
+  }
+  
+  .bounce-transition {
+    transition: var(--transition-bounce);
+  }
+  
+  .spring-transition {
+    transition: var(--transition-spring);
+  }
+  
+  /* Professional glass effect */
+  .glass-effect {
+    backdrop-filter: blur(10px);
+    background: hsl(var(--background) / 0.8);
+    border: 1px solid hsl(var(--border) / 0.3);
+  }
+  
+  /* Professional card styles */
+  .professional-card {
+    @apply bg-card border rounded-xl p-6 shadow-lg smooth-transition hover:shadow-xl;
+  }
+  
+  .ai-card {
+    @apply professional-card;
+    background: var(--gradient-ai);
+    border: 1px solid hsl(var(--ai-primary) / 0.2);
+  }
+  
+  .metric-card {
+    @apply professional-card hover:shadow-primary;
+  }
+  
+  /* Optimization score colors */
+  .score-excellent {
+    color: hsl(var(--score-excellent));
+  }
+  
+  .score-good {
+    color: hsl(var(--score-good));
+  }
+  
+  .score-fair {
+    color: hsl(var(--score-fair));
+  }
+  
+  .score-poor {
+    color: hsl(var(--score-poor));
+  }
+  
+  /* Interactive elements */
+  .interactive-hover {
+    @apply smooth-transition hover:scale-105 hover:shadow-lg;
+  }
+  
+  .ai-button {
+    @apply bg-gradient-to-r from-primary to-ai-primary text-primary-foreground hover:shadow-ai smooth-transition;
+  }
+}

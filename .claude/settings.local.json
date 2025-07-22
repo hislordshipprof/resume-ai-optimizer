@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(alembic revision:*)",
+      "Bash(alembic upgrade:*)",
+      "Bash(python test:*)",
+      "Bash(rm:*)"
+    ],
+    "deny": []
+  }
+}

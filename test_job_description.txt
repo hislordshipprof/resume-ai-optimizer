@@ -1,0 +1,47 @@
+Senior Software Engineer - Full Stack Development
+
+TechCorp Inc. is seeking a talented Senior Software Engineer to join our rapidly growing engineering team. We are a mid-size technology company developing cutting-edge SaaS solutions for enterprise clients.
+
+Position: Senior Software Engineer (Full Stack)
+Location: Remote/Hybrid (San Francisco, CA)
+Experience: 5+ years
+Salary: $120,000 - $160,000
+
+Key Responsibilities:
+• Design and develop scalable web applications using modern technologies
+• Lead technical discussions and mentor junior developers
+• Collaborate with product managers and designers to deliver high-quality features
+• Implement robust APIs and integrate with third-party services
+• Ensure code quality through testing, code reviews, and documentation
+• Participate in system architecture decisions and technical planning
+
+Required Skills:
+• 5+ years of professional software development experience
+• Strong proficiency in JavaScript/TypeScript and Python
+• Experience with React.js and Node.js
+• Knowledge of relational databases (PostgreSQL preferred)
+• Experience with cloud platforms (AWS or GCP)
+• Familiarity with containerization technologies (Docker, Kubernetes)
+• Understanding of CI/CD pipelines and DevOps practices
+• Strong problem-solving skills and attention to detail
+
+Preferred Skills:
+• Experience with FastAPI or Django frameworks
+• Knowledge of Redis and caching strategies
+• Familiarity with microservices architecture
+• Experience with GraphQL APIs
+• AWS certifications (Solutions Architect, Developer)
+• Experience with monitoring tools (DataDog, New Relic)
+
+Education Requirements:
+• Bachelor's degree in Computer Science, Engineering, or related field
+• Equivalent professional experience may be substituted
+
+What We Offer:
+• Competitive salary and equity package
+• Comprehensive health, dental, and vision insurance
+• Flexible PTO and remote work options
+• Professional development budget
+• Latest MacBook Pro and equipment
+
+Apply now with your resume and portfolio. We are an equal opportunity employer committed to diversity and inclusion.
